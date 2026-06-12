@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Button } from './components/ui/button';
 import AuthPage from './components/AuthPage';
 import { useAuth } from './context/AuthContext';
+import { apiUrl } from './lib/api';
 import keyIcon from './assets/key.png';
 import closedChest from './assets/treasure_closed.png';
 import treasureChest from './assets/treasure_opened.png';
@@ -45,7 +46,7 @@ export default function App() {
 
   useEffect(() => {
     if (!gameEnded || !user || !token) return;
-    fetch('/api/scores', {
+    fetch(apiUrl('/api/scores'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
