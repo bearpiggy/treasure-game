@@ -30,6 +30,14 @@ export default function AuthPage({ onContinueAsGuest }: AuthPageProps) {
     setError('');
   };
 
+  const parseJsonResponse = async (res: Response) => {
+    const contentType = res.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      throw new Error('Authentication service is unavailable. Please play as a guest.');
+    }
+    return res.json();
+  };
+
   const handleSignIn = async (data: FormData) => {
     setError('');
     setLoading(true);
@@ -39,7 +47,7 @@ export default function AuthPage({ onContinueAsGuest }: AuthPageProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      const json = await res.json();
+      const json = await parseJsonResponse(res);
       if (!res.ok) throw new Error(json.error);
       login(json.token, json.user);
     } catch (e: unknown) {
@@ -58,7 +66,7 @@ export default function AuthPage({ onContinueAsGuest }: AuthPageProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      const json = await res.json();
+      const json = await parseJsonResponse(res);
       if (!res.ok) throw new Error(json.error);
       login(json.token, json.user);
     } catch (e: unknown) {
