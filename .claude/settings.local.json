@@ -1,0 +1,45 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(Get-Item src\\\\audios\\\\*.mp3)",
+      "Bash(Select-Object Name, Length)",
+      "Bash(node server/index.js)",
+      "Bash(Start-Sleep -Seconds 2)",
+      "Bash(Invoke-RestMethod -Uri http://localhost:3001/api/auth/signup -Method POST -ContentType \"application/json\" -Body '{\"email\":\"test@test.com\",\"password\":\"test123\"}')",
+      "Bash(ConvertTo-Json)",
+      "PowerShell($body = '{\"email\":\"testuser@example.com\",\"password\":\"password123\"}'; $response = Invoke-RestMethod -Uri http://localhost:3001/api/auth/signup -Method POST -ContentType \"application/json\" -Body $body; Write-Output \"Signup OK - token: $\\($response.token.Substring\\(0,20\\)\\)... user: $\\($response.user.email\\)\")",
+      "PowerShell($body = '{\"email\":\"testuser@example.com\",\"password\":\"password123\"}'; $response = Invoke-RestMethod -Uri http://localhost:3001/api/auth/signin -Method POST -ContentType \"application/json\" -Body $body; $token = $response.token; Write-Output \"Signin OK - user: $\\($response.user.email\\)\"; $scoreBody = '{\"score\":100}'; $scoreResp = Invoke-RestMethod -Uri http://localhost:3001/api/scores -Method POST -ContentType \"application/json\" -Headers @{Authorization = \"Bearer $token\"} -Body $scoreBody; Write-Output \"Score saved: $\\($scoreResp.ok\\)\"; $history = Invoke-RestMethod -Uri http://localhost:3001/api/scores/me -Method GET -Headers @{Authorization = \"Bearer $token\"}; Write-Output \"Score history count: $\\($history.Count\\), latest score: $\\($history[0].score\\)\")",
+      "Skill(run)",
+      "Bash(grep -Hm1 ^description: 'C:\\\\Work\\\\Project\\\\claude_code_projects\\\\claude_code_treasure_game-initial/.claude/skills/*/SKILL.md')",
+      "PowerShell(Get-NetTCPConnection *)",
+      "Bash(curl -s -X POST http://localhost:3001/api/auth/signup -H \"Content-Type: application/json\" -d '{\"email\":\"debug@test.com\",\"password\":\"pass123\"}')",
+      "Bash(curl -s -X POST http://localhost:3001/api/auth/signin -H \"Content-Type: application/json\" -d '{\"email\":\"debug@test.com\",\"password\":\"pass123\"}')",
+      "Bash(npx tsc *)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(curl *)",
+      "mcp__ide__getDiagnostics",
+      "Bash(node -e \"require\\('playwright'\\)\")",
+      "Bash(npx --no playwright --version)",
+      "Bash(node *)",
+      "Bash(npm list *)",
+      "Bash(cd /tmp)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(vercel *)",
+      "PowerShell(gh *)",
+      "Bash(gh --version)",
+      "Bash(git --version)",
+      "Bash(gh auth *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  },
+  "keybindings": [
+    {
+      "action": "app:toggleTodos",
+      "key": "ctrl+shift+t"
+    }
+  ]
+}
