@@ -16,6 +16,9 @@ interface AuthPageProps {
   onContinueAsGuest: () => void;
 }
 
+const isStaticHost = window.location.hostname.endsWith('.github.io') ||
+  window.location.protocol === 'file:';
+
 export default function AuthPage({ onContinueAsGuest }: AuthPageProps) {
   const { login } = useAuth();
   const [error, setError] = useState('');
@@ -80,96 +83,116 @@ export default function AuthPage({ onContinueAsGuest }: AuthPageProps) {
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100 flex flex-col items-center justify-center p-8">
       <div className="text-center mb-8">
         <h1 className="text-4xl mb-4 text-amber-900">🏴‍☠️ Treasure Hunt Game 🏴‍☠️</h1>
-        <p className="text-amber-700">Sign in to save your scores, or play as a guest</p>
+        <p className="text-amber-700">
+          {isStaticHost ? 'Play as a guest — no account needed' : 'Sign in to save your scores, or play as a guest'}
+        </p>
       </div>
 
-      <Card className="w-full max-w-md shadow-lg">
-        <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <CardHeader className="pb-0">
-            <TabsList className="w-full">
-              <TabsTrigger value="signin" className="flex-1">Sign In</TabsTrigger>
-              <TabsTrigger value="signup" className="flex-1">Sign Up</TabsTrigger>
-            </TabsList>
-          </CardHeader>
-
-          <CardContent className="pt-6">
-            <TabsContent value="signin" className="mt-0">
-              <form onSubmit={signInForm.handleSubmit(handleSignIn)} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    {...signInForm.register('email', { required: true })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
-                  <Input
-                    id="signin-password"
-                    type="password"
-                    placeholder="••••••••"
-                    {...signInForm.register('password', { required: true })}
-                  />
-                </div>
-                {error && <p className="text-sm text-red-600">{error}</p>}
-                <Button
-                  type="submit"
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-                  disabled={loading}
-                >
-                  {loading ? 'Signing in...' : 'Sign In'}
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="signup" className="mt-0">
-              <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    {...signUpForm.register('email', { required: true })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="Min. 6 characters"
-                    {...signUpForm.register('password', { required: true, minLength: 6 })}
-                  />
-                  {signUpForm.formState.errors.password?.type === 'minLength' && (
-                    <p className="text-sm text-red-600">Password must be at least 6 characters</p>
-                  )}
-                </div>
-                {error && <p className="text-sm text-red-600">{error}</p>}
-                <Button
-                  type="submit"
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-                  disabled={loading}
-                >
-                  {loading ? 'Creating account...' : 'Create Account'}
-                </Button>
-              </form>
-            </TabsContent>
+      {isStaticHost ? (
+        <Card className="w-full max-w-md shadow-lg">
+          <CardContent className="pt-6 pb-6 text-center space-y-4">
+            <p className="text-amber-800 text-sm">
+              This is a static demo hosted on GitHub Pages. Account sign-in and score saving require the backend server and are not available here.
+            </p>
+            <Button
+              onClick={onContinueAsGuest}
+              className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              Play Now (Guest Mode)
+            </Button>
           </CardContent>
-        </Tabs>
-      </Card>
+        </Card>
+      ) : (
+        <>
+          <Card className="w-full max-w-md shadow-lg">
+            <Tabs value={activeTab} onValueChange={handleTabChange}>
+              <CardHeader className="pb-0">
+                <TabsList className="w-full">
+                  <TabsTrigger value="signin" className="flex-1">Sign In</TabsTrigger>
+                  <TabsTrigger value="signup" className="flex-1">Sign Up</TabsTrigger>
+                </TabsList>
+              </CardHeader>
 
-      <div className="mt-6">
-        <Button
-          variant="ghost"
-          onClick={onContinueAsGuest}
-          className="text-amber-700 hover:text-amber-900 hover:bg-amber-100"
-        >
-          Continue as Guest (scores won't be saved)
-        </Button>
-      </div>
+              <CardContent className="pt-6">
+                <TabsContent value="signin" className="mt-0">
+                  <form onSubmit={signInForm.handleSubmit(handleSignIn)} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-email">Email</Label>
+                      <Input
+                        id="signin-email"
+                        type="email"
+                        placeholder="you@example.com"
+                        {...signInForm.register('email', { required: true })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-password">Password</Label>
+                      <Input
+                        id="signin-password"
+                        type="password"
+                        placeholder="••••••••"
+                        {...signInForm.register('password', { required: true })}
+                      />
+                    </div>
+                    {error && <p className="text-sm text-red-600">{error}</p>}
+                    <Button
+                      type="submit"
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                      disabled={loading}
+                    >
+                      {loading ? 'Signing in...' : 'Sign In'}
+                    </Button>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="signup" className="mt-0">
+                  <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-email">Email</Label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="you@example.com"
+                        {...signUpForm.register('email', { required: true })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-password">Password</Label>
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        placeholder="Min. 6 characters"
+                        {...signUpForm.register('password', { required: true, minLength: 6 })}
+                      />
+                      {signUpForm.formState.errors.password?.type === 'minLength' && (
+                        <p className="text-sm text-red-600">Password must be at least 6 characters</p>
+                      )}
+                    </div>
+                    {error && <p className="text-sm text-red-600">{error}</p>}
+                    <Button
+                      type="submit"
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                      disabled={loading}
+                    >
+                      {loading ? 'Creating account...' : 'Create Account'}
+                    </Button>
+                  </form>
+                </TabsContent>
+              </CardContent>
+            </Tabs>
+          </Card>
+
+          <div className="mt-6">
+            <Button
+              variant="ghost"
+              onClick={onContinueAsGuest}
+              className="text-amber-700 hover:text-amber-900 hover:bg-amber-100"
+            >
+              Continue as Guest (scores won't be saved)
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
